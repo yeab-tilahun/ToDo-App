@@ -1,4 +1,9 @@
 
+document.addEventListener("readystatechange", (event) => {
+    if (event.target.readyState === "complete") {
+        displayFromLocalStorage()
+    }
+});
 const addBtn = document.getElementById("button-addon2")
 addBtn.addEventListener("click", () => {
     const task = document.getElementById("task_input").value
@@ -24,13 +29,18 @@ const addToList = (data) => {
         const input = document.createElement("input")
         const label = document.createElement("label")
         label.classList.add("form-check-label")
-        label.htmlFor = "firstCheckbox"
+        const ID = generateIdForCheckBox()
+        label.htmlFor = ID
         label.innerHTML = element
 
         input.type = "checkbox"
         input.classList.add("form-check-input")
         input.classList.add("me-1")
-        input.id = "firstCheckbox"
+        input.id = ID
+        input.value = element
+        input.addEventListener("click", () => {
+            removeTask(input.id)
+        })
 
         li.classList.add("list-group-item")
 
@@ -53,7 +63,7 @@ const addToLocalStorage = (task) => {
 
 const displayFromLocalStorage = () => {
     const data = localStorage.getItem("ToDoData")
-    if (data != null) {
+    if (data != null && data != "") {
         const taskArr = data.split(",")
         addToList(taskArr)
     } else {
@@ -61,4 +71,42 @@ const displayFromLocalStorage = () => {
     }
 
 }
-displayFromLocalStorage()
+
+
+const generateIdForCheckBox = () => {
+    const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+    let result = '';
+
+    for (let i = 0; i < 5; i++) {
+        const randomIndex = Math.floor(Math.random() * characters.length);
+        result += characters.charAt(randomIndex);
+    }
+    return result;
+}
+
+const removeTask = (id) => {
+    const checkboxes = document.querySelectorAll(".me-1");
+    const value = document.getElementById(id).value
+
+
+    const data = localStorage.getItem("ToDoData")
+    const taskArr = data.split(",")
+
+    const newArr = taskArr.filter((task) => task != value)
+
+
+    localStorage.removeItem("ToDoData")
+    localStorage.setItem("ToDoData", newArr)
+
+    const preData = localStorage.getItem("Completed")
+    const completed = []
+    completed.push(preData)
+    completed.push(taskArr.filter((task) => task == value))
+    localStorage.setItem("Completed", completed)
+
+    checkboxes.forEach((checkbox) => {
+        if (checkbox.checked) {
+            checkbox.parentElement.remove();
+        }
+    });
+}
