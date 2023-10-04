@@ -10,6 +10,7 @@ addBtn.addEventListener("click", () => {
     // addToList(task)
     addToLocalStorage(task)
     displayFromLocalStorage()
+    document.getElementById("task_input").value = ""
 
 })
 
@@ -71,6 +72,16 @@ const displayFromLocalStorage = () => {
     }
 
 }
+const displayCompletedFromLocalStorage = () => {
+    const data = localStorage.getItem("Completed")
+    if (data != null && data != "") {
+        const taskArr = data.split(",")
+        addToList(taskArr)
+    } else {
+        addToList(null)
+    }
+
+}
 
 
 const generateIdForCheckBox = () => {
@@ -91,16 +102,20 @@ const removeTask = (id) => {
 
     const data = localStorage.getItem("ToDoData")
     const taskArr = data.split(",")
-
+    console.log(taskArr)
     const newArr = taskArr.filter((task) => task != value)
+    console.log(newArr)
 
 
     localStorage.removeItem("ToDoData")
     localStorage.setItem("ToDoData", newArr)
 
+
     const preData = localStorage.getItem("Completed")
     const completed = []
-    completed.push(preData)
+    if (preData != null && preData != "") {
+        completed.push(preData)
+    }
     completed.push(taskArr.filter((task) => task == value))
     localStorage.setItem("Completed", completed)
 
@@ -110,3 +125,19 @@ const removeTask = (id) => {
         }
     });
 }
+
+const show = document.getElementById("show")
+const inProgress = document.getElementById("inProgress")
+const completed = document.getElementById("completed")
+
+inProgress.addEventListener("click", () => {
+    show.textContent = "In Progress "
+    displayFromLocalStorage()
+})
+
+completed.addEventListener("click", () => {
+    show.textContent = "Completed"
+    displayCompletedFromLocalStorage()
+})
+
+

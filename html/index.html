@@ -18,31 +18,19 @@
     <input type="text" class="form-control" placeholder="Add Task" name="task" id="task_input">
     <button type="button" class="btn btn-dark" type="button" id="button-addon2" >+</button>
 </div>
-<div class="dropdown container-sm">
-    <button class="btn btn-warning btn-sm dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
-      Show
+<div class="container-sm dropdown">
+    <button class="btn btn-warning btn-sm dropdown-toggle" style="margin-left: 5px;" id="show" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+      In Progress
     </button>
     <ul class="dropdown-menu">
-        <li><a class="dropdown-item" href="#">In progress</a></li>
-      <li><a class="dropdown-item" href="#">Completed</a></li>
+        <li><a class="dropdown-item" href="#" id="inProgress">In progress</a></li>
+      <li><a class="dropdown-item" href="#" id="completed">Completed</a></li>
     </ul>
   </div>
   <br>
 <div class="container-sm" id="list_div">
-    <h6 id="empty_msg"></h6>
+    <h6 style="margin-left: 5px;" id="empty_msg"></h6>
     <ul class="list-group" id="list">
-        <!-- <li class="list-group-item">
-          <input class="form-check-input me-1" type="checkbox" value="" id="firstCheckbox">
-          <label class="form-check-label" for="firstCheckbox">First checkbox</label>
-        </li>
-        <li class="list-group-item">
-          <input class="form-check-input me-1" type="checkbox" value="" id="secondCheckbox">
-          <label class="form-check-label" for="secondCheckbox">Second checkbox</label>
-        </li>
-        <li class="list-group-item">
-          <input class="form-check-input me-1" type="checkbox" value="" id="thirdCheckbox">
-          <label class="form-check-label" for="thirdCheckbox">Third checkbox</label>
-        </li> -->
       </ul>
 </div>
 
