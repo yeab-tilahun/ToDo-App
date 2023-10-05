@@ -1,27 +1,31 @@
 
 document.addEventListener("readystatechange", (event) => {
     if (event.target.readyState === "complete") {
-        displayFromLocalStorage()
+        displayInProgressFromLocalStorage()
     }
 });
+
 const addBtn = document.getElementById("button-addon2")
 addBtn.addEventListener("click", () => {
     const task = document.getElementById("task_input").value
-    // addToList(task)
     addToLocalStorage(task)
-    displayFromLocalStorage()
+    displayInProgressFromLocalStorage()
     document.getElementById("task_input").value = ""
 
 })
 
-const list = document.getElementById("list")
-
-const addToList = (data) => {
+// display data to page
+const addToList = (data, completed) => {
     const ul = document.getElementById("list")
     const h6 = document.getElementById("empty_msg")
     ul.innerHTML = "";
     if (data == null) {
-        h6.textContent = "No task for today :)"
+        if (completed) {
+            h6.textContent = "No completed task! :("
+        } else {
+            h6.textContent = "No task for today :)"
+        }
+
         return
     }
     h6.textContent = ""
@@ -29,6 +33,8 @@ const addToList = (data) => {
         const li = document.createElement("li")
         const input = document.createElement("input")
         const label = document.createElement("label")
+        const br = document.createElement("br")
+
         label.classList.add("form-check-label")
         const ID = generateIdForCheckBox()
         label.htmlFor = ID
@@ -39,6 +45,10 @@ const addToList = (data) => {
         input.classList.add("me-1")
         input.id = ID
         input.value = element
+        if (completed) {
+            input.checked = true
+            input.disabled = true
+        }
         input.addEventListener("click", () => {
             removeTask(input.id)
         })
@@ -48,9 +58,11 @@ const addToList = (data) => {
         li.appendChild(input)
         li.appendChild(label)
         ul.appendChild(li)
+        ul.appendChild(br)
     });
 }
 
+// save to local storage
 const addToLocalStorage = (task) => {
     const taskArr = []
     const data = localStorage.getItem("ToDoData")
@@ -62,13 +74,13 @@ const addToLocalStorage = (task) => {
     localStorage.setItem("ToDoData", taskArr)
 }
 
-const displayFromLocalStorage = () => {
+const displayInProgressFromLocalStorage = () => {
     const data = localStorage.getItem("ToDoData")
     if (data != null && data != "") {
         const taskArr = data.split(",")
-        addToList(taskArr)
+        addToList(taskArr, false)
     } else {
-        addToList(null)
+        addToList(null, false)
     }
 
 }
@@ -76,14 +88,14 @@ const displayCompletedFromLocalStorage = () => {
     const data = localStorage.getItem("Completed")
     if (data != null && data != "") {
         const taskArr = data.split(",")
-        addToList(taskArr)
+        addToList(taskArr, true)
     } else {
-        addToList(null)
+        addToList(null, true)
     }
 
 }
 
-
+// used to name different ID for checkbox
 const generateIdForCheckBox = () => {
     const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
     let result = '';
@@ -95,6 +107,7 @@ const generateIdForCheckBox = () => {
     return result;
 }
 
+// removes from local storage and from display
 const removeTask = (id) => {
     const checkboxes = document.querySelectorAll(".me-1");
     const value = document.getElementById(id).value
@@ -102,9 +115,7 @@ const removeTask = (id) => {
 
     const data = localStorage.getItem("ToDoData")
     const taskArr = data.split(",")
-    console.log(taskArr)
     const newArr = taskArr.filter((task) => task != value)
-    console.log(newArr)
 
 
     localStorage.removeItem("ToDoData")
@@ -126,18 +137,17 @@ const removeTask = (id) => {
     });
 }
 
+// for dropdown
 const show = document.getElementById("show")
 const inProgress = document.getElementById("inProgress")
 const completed = document.getElementById("completed")
 
 inProgress.addEventListener("click", () => {
     show.textContent = "In Progress "
-    displayFromLocalStorage()
+    displayInProgressFromLocalStorage()
 })
 
 completed.addEventListener("click", () => {
     show.textContent = "Completed"
     displayCompletedFromLocalStorage()
 })
-
-
